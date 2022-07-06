@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+    webproxy:
+        image: traefik:v2.7.3
+        command:
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        network_mode: "host"
+
+    database:
+        image: mariadb:10.8
+        volumes:
+            - type: bind
+              source: "${IGWN_SANDBOX}/var/lib/mysql"
+              target: /var/lib/mysql
+        environment:
+            - MARIADB_ROOT_PASSWORD=password
+            - MARIADB_DATABASE=registry
+            - MARIADB_USER=registry_user
+            - MARIADB_PASSWORD=password
+        network_mode: "host"
+
+    registry:
+        image: public.ecr.aws/cilogon/comanage-registry:4.0.2-mod-auth-openidc-1
+        volumes:
+            - type: bind
+              source: "${IGWN_SANDBOX}/srv/comanage-registry/local"
+              target: /srv/comanage-registry/local
+            - type: bind
+              source: "${IGWN_SANDBOX}/etc/apache2/ports.conf"
+              target: /etc/apache2/ports.conf
+            - type: bind
+              source: ${IGWN_SANDBOX}/etc/apache2/sites-available/000-comanage.conf
+              target: /etc/apache2/sites-available/000-comanage.conf
+            - type: bind
+              source: ${IGWN_SANDBOX}/etc/apache2/conf-enabled/mod-auth-openidc.conf
+              target: /etc/apache2/conf-enabled/mod-auth-openidc.conf
+        environment:
+            - COMANAGE_REGISTRY_DATASOURCE=Database/Mysql
+            - COMANAGE_REGISTRY_ADMIN_GIVEN_NAME=ScottCmpAdmin
+            - COMANAGE_REGISTRY_ADMIN_FAMILY_NAME=Koranda
+            - COMANAGE_REGISTRY_ADMIN_USERNAME=http://cilogon.org/serverT/users/64703
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.registry-http.entrypoints=web"
+            - "traefik.http.routers.registry-http.rule=PathPrefix(`/registry/`) || PathPrefix(`/secure/`)"
+            - "traefik.http.routers.registry-http.middlewares=registry-https"
+            - "traefik.http.middlewares.registry-https.redirectscheme.scheme=https"
+            - "traefik.http.routers.registry.entrypoints=websecure"
+            - "traefik.http.routers.registry.rule=PathPrefix(`/registry/`) || PathPrefix(`/secure/`)"
+            - "traefik.http.routers.registry.tls=true"
+            - "traefik.http.services.registry.loadbalancer.server.port=8080"
+        network_mode: "host"
+
+#    slapd:
+#        image: public.ecr.aws/cilogon/comanage-registry-slapd:8
+#        command: ["slapd", "-d", "256", "-h", "ldapi:/// ldap:///", "-u", "openldap", "-g", "openldap"]
+#        volumes:
+#            - type: bind
+#              source: ${IGWN_SANDBOX}/var/lib/ldap
+#              target: /var/lib/ldap
+#            - type: bind
+#              source: ${IGWN_SANDBOX}/etc/ldap/slapd.d
+#              target: /etc/ldap/slapd.d
+#            - type: bind
+#              source: ${IGWN_SANDBOX}/ldif
+#              target: /ldif
+#            - type: bind
+#              source: ${IGWN_SANDBOX}/schema
+#              target: /schema
+#        environment:
+#            - OLC_SUFFIX=dc=directory,dc=ligo,dc=org
+#            - OLC_ROOT_PW=password
+#            - OLC_ROOT_DN=cn=admin,dc=directory,dc=ligo,dc=org
+#            - OLC_ROOT_DN_PASSWORD=password
+#        network_mode: "host"
+#
+#    grouper-ui:
+#        image: i2incommon/grouper:2.5.60
+#        command: ["bash", "-c", "exec ui"]
+#        volumes:
+#            - type: bind
+#              source: ${IGWN_SANDBOX}/opt/grouper/slashRoot
+#              target: /opt/grouper/slashRoot
+#        environment:
+#            - GROUPER_RUN_SHIB_SP=false
+#            - GROUPER_USE_SSL=false
+#            - GROUPER_APACHE_SERVER_NAME=https://localhost:443
+#            - GROUPER_APACHE_NONSSL_PORT=8000
+#            - GROUPER_TOMCAT_HTTP_PORT=9000
+#            - GROUPER_UI_GROUPER_AUTH=true
+#            - GROUPER_DATABASE_URL=jdbc:mysql://localhost:3306/grouper?CharSet=utf8&useUnicode=true&characterEncoding=utf8&useSSL=false
+#            - GROUPER_DATABASE_USERNAME=grouper
+#            - GROUPER_DATABASE_PASSWORD=password
+#            - GROUPER_MORPHSTRING_ENCRYPT_KEY=password
+#            - GROUPER_AUTO_DDL_UPTOVERSION=v2.5.*
+#            - GROUPER_MAX_MEMORY=512m
+#        labels:
+#            - "traefik.enable=true"
+#            - "traefik.http.routers.grouper-http.entrypoints=web"
+#            - "traefik.http.routers.grouper-http.rule=PathPrefix(`/grouper/`)"
+#            - "traefik.http.routers.grouper-http.middlewares=grouper-https"
+#            - "traefik.http.middlewares.grouper-https.redirectscheme.scheme=https"
+#            - "traefik.http.routers.grouper.entrypoints=websecure"
+#            - "traefik.http.routers.grouper.rule=PathPrefix(`/grouper/`)"
+#            - "traefik.http.routers.grouper.tls=true"
+#            - "traefik.http.services.grouper.loadbalancer.server.port=8000"
+#        network_mode: "host"
+#    

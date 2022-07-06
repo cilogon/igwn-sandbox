@@ -1,0 +1,53 @@
+dn: o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: dcObject
+objectclass: organization
+dc: directory
+o: LIGO
+
+dn: ou=people,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: organizationalUnit
+ou: people
+
+dn: ou=groups,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: organizationalUnit
+ou: groups
+
+dn: ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: organizationalUnit
+ou: system
+
+dn: uid=registry_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: account
+objectclass: simpleSecurityObject
+uid: registry_user
+description: CILogon Registry user for LIGO
+userPassword: password
+
+dn: uid=readonly_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: account
+objectclass: simpleSecurityObject
+uid: readonly_user
+description: readonly user for LIGO
+userPassword: password
+
+dn: uid=proxy_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: account
+objectclass: simpleSecurityObject
+uid: proxy_user
+description: SAML proxy user for LIGO
+userPassword: password
+
+dn: uid=grouper_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: account
+objectclass: simpleSecurityObject
+uid: grouper_user
+description: Grouper user for LIGO
+userPassword: password

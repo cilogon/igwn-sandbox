@@ -1,0 +1,6 @@
+dn: o=CO,dc=directory,dc=ligo,dc=org
+changetype: add
+objectclass: dcObject
+objectclass: organization
+dc: directory
+o: CO
