@@ -35,16 +35,16 @@ services:
               source: "${IGWN_SANDBOX}/etc/apache2/ports.conf"
               target: /etc/apache2/ports.conf
             - type: bind
-              source: ${IGWN_SANDBOX}/etc/apache2/sites-available/000-comanage.conf
+              source: "${IGWN_SANDBOX}/etc/apache2/sites-available/000-comanage.conf"
               target: /etc/apache2/sites-available/000-comanage.conf
             - type: bind
-              source: ${IGWN_SANDBOX}/etc/apache2/conf-enabled/mod-auth-openidc.conf
+              source: "${IGWN_SANDBOX}/etc/apache2/conf-enabled/mod-auth-openidc.conf"
               target: /etc/apache2/conf-enabled/mod-auth-openidc.conf
         environment:
             - COMANAGE_REGISTRY_DATASOURCE=Database/Mysql
-            - COMANAGE_REGISTRY_ADMIN_GIVEN_NAME=ScottCmpAdmin
-            - COMANAGE_REGISTRY_ADMIN_FAMILY_NAME=Koranda
-            - COMANAGE_REGISTRY_ADMIN_USERNAME=http://cilogon.org/serverT/users/64703
+            - COMANAGE_REGISTRY_ADMIN_GIVEN_NAME=YOUR_GIVEN_NAME
+            - COMANAGE_REGISTRY_ADMIN_FAMILY_NAME=YOUR_FAMILY_NAME
+            - COMANAGE_REGISTRY_ADMIN_USERNAME=YOUR_CILOGON_USERNAME
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.registry-http.entrypoints=web"
