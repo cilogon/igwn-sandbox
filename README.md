@@ -20,27 +20,31 @@ record the value for "CILogon User Identifier" (it will be a URL that begins wit
 1. Email [help@cilogon.org](mailto:help@cilogon.org) and ask for an OIDC Client ID and Client Secret
 to use for your IGWN sandbox.
 
+1. Obtain SMTP configuration details, including any necessary credentials, for a SMTP server that your
+sandbox can use for outoing email messages. You may want to use a Gmail account with 
+a [App Password](https://support.google.com/mail/answer/185833?hl=en).
+
 <a name="bootstrap"></a>
 ## Initial Bootstrap
 
 1. Clone this repository to your local filesystem:
 
-```
-git clone https://github.com/cilogon/igwn-sandbox.git
-```
+    ```
+    git clone https://github.com/cilogon/igwn-sandbox.git
+    ```
 
 1. Make the cloned repository the current working directory:
 
-```
-cd igwn-sandbox
-```
+    ```
+    cd igwn-sandbox
+    ```
 
 1. Define the environment variable `IGWN_SANDBOX` to point to the 
 cloned directory:
 
-```
-export IGWN_SANDBOX=$(pwd)
-```
+    ```
+    export IGWN_SANDBOX=$(pwd)
+    ```
 
 1. Edit the file `etc/apache2/conf-enabled/mod-auth-openidc.conf` and replace `YOUR_CLIENT_ID` with your OIDC Client
    ID and replace `YOUR_CLIENT_SECRET` with your OIDC Client Secret. Also replace `YOUR_RANDOM_STRING` with some 20
@@ -48,6 +52,14 @@ export IGWN_SANDBOX=$(pwd)
 
 1. Edit the file `docker-compose.yml` and replace `YOUR_GIVEN_NAME` with your given name, `YOUR_FAMILY_NAME` with
    your family name, and `YOUR_CILOGON_USERNAME` with your CILogon User Identifier.
+
+1. Edit the file `srv/comanage-registry/local/Config/email.php` with the details of your SMTP configuration.
+
+1. Start the services using Docker Compose (make sure `${IGWN_SANDBOX}` is your current directory):
+    ```
+    docker compose up -d
+    ```
+
 
 
 ```
