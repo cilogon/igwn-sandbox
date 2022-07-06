@@ -57,29 +57,29 @@ services:
             - "traefik.http.services.registry.loadbalancer.server.port=8080"
         network_mode: "host"
 
-#    slapd:
-#        image: public.ecr.aws/cilogon/comanage-registry-slapd:8
-#        command: ["slapd", "-d", "256", "-h", "ldapi:/// ldap:///", "-u", "openldap", "-g", "openldap"]
-#        volumes:
-#            - type: bind
-#              source: ${IGWN_SANDBOX}/var/lib/ldap
-#              target: /var/lib/ldap
-#            - type: bind
-#              source: ${IGWN_SANDBOX}/etc/ldap/slapd.d
-#              target: /etc/ldap/slapd.d
-#            - type: bind
-#              source: ${IGWN_SANDBOX}/ldif
-#              target: /ldif
-#            - type: bind
-#              source: ${IGWN_SANDBOX}/schema
-#              target: /schema
-#        environment:
-#            - OLC_SUFFIX=dc=directory,dc=ligo,dc=org
-#            - OLC_ROOT_PW=password
-#            - OLC_ROOT_DN=cn=admin,dc=directory,dc=ligo,dc=org
-#            - OLC_ROOT_DN_PASSWORD=password
-#        network_mode: "host"
-#
+    slapd:
+        image: public.ecr.aws/cilogon/comanage-registry-slapd:8
+        command: ["slapd", "-d", "256", "-h", "ldapi:/// ldap:///", "-u", "openldap", "-g", "openldap"]
+        volumes:
+            - type: bind
+              source: "${IGWN_SANDBOX}/var/lib/ldap"
+              target: /var/lib/ldap
+            - type: bind
+              source: "${IGWN_SANDBOX}/etc/ldap/slapd.d"
+              target: /etc/ldap/slapd.d
+            - type: bind
+              source: "${IGWN_SANDBOX}/ldif"
+              target: /ldif
+            - type: bind
+              source: "${IGWN_SANDBOX}/schema"
+              target: /schema
+        environment:
+            - OLC_SUFFIX=dc=directory,dc=ligo,dc=org
+            - OLC_ROOT_PW=password
+            - OLC_ROOT_DN=cn=admin,dc=directory,dc=ligo,dc=org
+            - OLC_ROOT_DN_PASSWORD=password
+        network_mode: "host"
+
 #    grouper-ui:
 #        image: i2incommon/grouper:2.5.60
 #        command: ["bash", "-c", "exec ui"]
