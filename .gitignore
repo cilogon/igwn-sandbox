@@ -1,0 +1,13 @@
+# Ignore vim temporary files
+.*.swp
+
+# Ignore LDAP directory olc configuration directory and files
+etc/ldap/slapd.d/cn=config*
+
+# Ignore LDAP directory data files
+var/lib/ldap/data.mdb
+var/lib/ldap/lock.mdb
+
+# Ignore MariaDB data directory except for empty file
+var/lib/mysql/
+!var/lib/mysql/empty
