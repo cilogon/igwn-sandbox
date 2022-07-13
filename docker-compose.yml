@@ -18,6 +18,9 @@ services:
             - type: bind
               source: "${IGWN_SANDBOX}/var/lib/mysql"
               target: /var/lib/mysql
+            - type: bind
+              source: "${IGWN_SANDBOX}/docker-entrypoint-initdb.d"
+              target: /docker-entrypoint-initdb.d
         environment:
             - MARIADB_ROOT_PASSWORD=password
             - MARIADB_DATABASE=registry
@@ -80,35 +83,34 @@ services:
             - OLC_ROOT_DN_PASSWORD=password
         network_mode: "host"
 
-#    grouper-ui:
-#        image: i2incommon/grouper:2.5.60
-#        command: ["bash", "-c", "exec ui"]
-#        volumes:
-#            - type: bind
-#              source: ${IGWN_SANDBOX}/opt/grouper/slashRoot
-#              target: /opt/grouper/slashRoot
-#        environment:
-#            - GROUPER_RUN_SHIB_SP=false
-#            - GROUPER_USE_SSL=false
-#            - GROUPER_APACHE_SERVER_NAME=https://localhost:443
-#            - GROUPER_APACHE_NONSSL_PORT=8000
-#            - GROUPER_TOMCAT_HTTP_PORT=9000
-#            - GROUPER_UI_GROUPER_AUTH=true
-#            - GROUPER_DATABASE_URL=jdbc:mysql://localhost:3306/grouper?CharSet=utf8&useUnicode=true&characterEncoding=utf8&useSSL=false
-#            - GROUPER_DATABASE_USERNAME=grouper
-#            - GROUPER_DATABASE_PASSWORD=password
-#            - GROUPER_MORPHSTRING_ENCRYPT_KEY=password
-#            - GROUPER_AUTO_DDL_UPTOVERSION=v2.5.*
-#            - GROUPER_MAX_MEMORY=512m
-#        labels:
-#            - "traefik.enable=true"
-#            - "traefik.http.routers.grouper-http.entrypoints=web"
-#            - "traefik.http.routers.grouper-http.rule=PathPrefix(`/grouper/`)"
-#            - "traefik.http.routers.grouper-http.middlewares=grouper-https"
-#            - "traefik.http.middlewares.grouper-https.redirectscheme.scheme=https"
-#            - "traefik.http.routers.grouper.entrypoints=websecure"
-#            - "traefik.http.routers.grouper.rule=PathPrefix(`/grouper/`)"
-#            - "traefik.http.routers.grouper.tls=true"
-#            - "traefik.http.services.grouper.loadbalancer.server.port=8000"
-#        network_mode: "host"
-#    
+    grouper-ui:
+        image: i2incommon/grouper:2.5.60
+        command: ["bash", "-c", "exec ui"]
+        volumes:
+            - type: bind
+              source: "${IGWN_SANDBOX}/opt/grouper/slashRoot"
+              target: /opt/grouper/slashRoot
+        environment:
+            - GROUPER_RUN_SHIB_SP=false
+            - GROUPER_USE_SSL=false
+            - GROUPER_APACHE_SERVER_NAME=https://localhost:443
+            - GROUPER_APACHE_NONSSL_PORT=8000
+            - GROUPER_TOMCAT_HTTP_PORT=9000
+            - GROUPER_UI_GROUPER_AUTH=true
+            - GROUPER_DATABASE_URL=jdbc:mysql://localhost:3306/grouper?CharSet=utf8&useUnicode=true&characterEncoding=utf8&useSSL=false
+            - GROUPER_DATABASE_USERNAME=grouper
+            - GROUPER_DATABASE_PASSWORD=password
+            - GROUPER_MORPHSTRING_ENCRYPT_KEY=password
+            - GROUPER_AUTO_DDL_UPTOVERSION=v2.5.*
+            - GROUPER_MAX_MEMORY=512m
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.grouper-http.entrypoints=web"
+            - "traefik.http.routers.grouper-http.rule=PathPrefix(`/grouper/`)"
+            - "traefik.http.routers.grouper-http.middlewares=grouper-https"
+            - "traefik.http.middlewares.grouper-https.redirectscheme.scheme=https"
+            - "traefik.http.routers.grouper.entrypoints=websecure"
+            - "traefik.http.routers.grouper.rule=PathPrefix(`/grouper/`)"
+            - "traefik.http.routers.grouper.tls=true"
+            - "traefik.http.services.grouper.loadbalancer.server.port=8000"
+        network_mode: "host"
