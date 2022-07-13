@@ -3,8 +3,8 @@
 ## Table of Contents
 [Preliminaries](#preliminaries)  
 [Initial Bootstrap](#bootstrap)  
-[Docker Compose Tips](#composetips)
-[Inspecting Database Tables](#databasetables)
+[Docker Compose Tips](#composetips)  
+[Inspecting Database Tables](#databasetables)  
 
 <a name="preliminaries"></a>
 ## Preliminaries
