@@ -1,0 +1,3 @@
+[submodule "srv/comanage-registry/local/Plugin/MyligosyncJob"]
+	path = srv/comanage-registry/local/Plugin/MyligosyncJob
+	url = git@github.com:cilogon/MyligosyncJob.git

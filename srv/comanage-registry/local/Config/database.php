@@ -11,4 +11,14 @@ class DATABASE_CONFIG {
     'password' => 'password',
     'database' => 'registry',
     );
+
+  public $myligo = array(
+    'datasource' => 'Database/Mysql',
+    'persistent' => false,
+    'host' => 'myligo3.ligo.caltech.edu',
+    'login' => 'YOUR_LOGIN',
+    'password' => 'YOUR_PASSWORD',
+    'database' => 'myligo',
+  );
+
 }
