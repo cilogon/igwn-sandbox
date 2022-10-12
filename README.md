@@ -30,10 +30,10 @@ an [App Password](https://support.google.com/mail/answer/185833?hl=en).
 <a name="bootstrap"></a>
 ## Initial Services Bootstrap
 
-1. Clone this repository to your local filesystem:
+1. Clone this repository (and the submodules) to your local filesystem:
 
     ```
-    git clone https://github.com/cilogon/igwn-sandbox.git
+    git clone --recurse-submodules https://github.com/cilogon/igwn-sandbox.git
     ```
 
 1. Make the cloned repository the current working directory:
@@ -194,12 +194,6 @@ cloned directory:
 
     ```
     sudo chown $USER srv/comanage-registry/local/Plugin
-    ```
-
-1. Clone the MyligosyncJob as a submodule:
-
-    ```
-    git submodule add https://github.com/cilogon/MyligosyncJob.git srv/comanage-registry/local/Plugin/MyligosyncJob
     ```
 
 1. Edit the COmanage Registry database configuration file `srv/comanage-registry/local/Config/database.php` and replace
