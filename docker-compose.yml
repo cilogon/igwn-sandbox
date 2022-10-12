@@ -150,3 +150,27 @@ services:
             - "traefik.http.routers.grouper-ws.tls=true"
             - "traefik.http.services.grouper-ws.loadbalancer.server.port=8100"
         network_mode: "host"
+
+    grouper-daemon:
+        image: i2incommon/grouper:2.5.60
+        profiles:
+            - grouper-daemon
+        command: ["bash", "-c", "exec daemon"]
+        volumes:
+            - type: bind
+              source: "${IGWN_SANDBOX}/opt/grouper/slashRoot"
+              target: /opt/grouper/slashRoot
+        environment:
+            - GROUPER_RUN_SHIB_SP=false
+            - GROUPER_RUN_APACHE=false
+            - GROUPER_RUN_TOMEE=true
+            - GROUPER_TOMCAT_HTTP_PORT=9200
+            - GROUPER_TOMCAT_AJP_PORT=8209
+            - GROUPER_TOMCAT_SHUTDOWN_PORT=8205
+            - GROUPER_DATABASE_URL=jdbc:mysql://localhost:3306/grouper?CharSet=utf8&useUnicode=true&characterEncoding=utf8&useSSL=false
+            - GROUPER_DATABASE_USERNAME=grouper
+            - GROUPER_DATABASE_PASSWORD=password
+            - GROUPER_MORPHSTRING_ENCRYPT_KEY=password
+            - GROUPER_AUTO_DDL_UPTOVERSION=v2.5.*
+            - GROUPER_MAX_MEMORY=512m
+        network_mode: "host"

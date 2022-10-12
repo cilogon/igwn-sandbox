@@ -184,6 +184,12 @@ cloned directory:
     }
     ```
 
+1. Start the Grouper daemon by running
+
+    ```
+    docker compose --profile grouper-ws --profile grouper-daemon up -d
+    ```
+
 <a name="composetips"></a>
 ## Docker Compose Tips
 
