@@ -111,7 +111,78 @@ cloned directory:
 
 1. Exit GSH by entering `Ctrl+d` and then exit the container by entering `exit`.
 
+1. Now that the Grouper UI has run and initialized the Grouper database, start the Grouper web services (WS) by running
 
+    ```
+    docker compose --profile grouper-ws up -d
+    ```
+
+1. Monitor the Grouper WS logs by doing
+
+    ```
+    docker compose logs -f grouper-ws
+    ```
+
+    until you see a line like `Server startup in 10673 ms`
+
+1. Break into the Grouper WS container as the user tomcat by running
+
+    ```
+    docker exec -u tomcat -it igwn-sandbox-grouper-ws-1 /bin/bash
+    ```
+
+1. Start the Grouper GSH binary:
+
+    ```
+    ./bin/gsh.sh
+    ```
+
+1. Execute the following GSH command:
+
+    ```
+    new GrouperPasswordSave().assignApplication(GrouperPassword.Application.WS).assignUsername("GrouperSystem").assignPassword("password").save();
+    ```
+
+1. Exit GSH by entering `Ctrl+d` and then exit the container by entering `exit`.
+
+1. Test the Grouper WS using the `curl` and `jq` commands:
+
+    ```
+    curl \
+        -k \
+        -u GrouperSystem:password \
+        'https://localhost/grouper-ws/servicesRest/json/v2_5_000/groups/etc%3Asysadmingroup/members' \
+        | jq
+    ```
+
+    The output should look something like this:
+
+    ```
+    {
+      "WsGetMembersLiteResult": {
+        "resultMetadata": {
+          "success": "T",
+          "resultCode": "SUCCESS",
+          "resultMessage": "Success for: clientVersion: 2.5.0, wsGroupLookups: Array size: 1: [0]: WsGroupLookup[pitGroups=[],groupName=etc:sysadmingroup]\n\n, memberFilter: All, includeSubjectDetail: false, actAsSubject: null, fieldName: null, subjectAttributeNames: null\n, paramNames: \n, params: null\n, sourceIds: null\n, pointInTimeFrom: null, pointInTimeTo: null, pageSize: null, pageNumber: null, sortString: null, ascending: null"
+        },
+        "wsGroup": {
+          "extension": "sysadmingroup",
+          "displayName": "etc:sysadmingroup",
+          "description": "system administrators with all privileges",
+          "uuid": "0ee05235ee2643ee8f3049b7ff2ee096",
+          "enabled": "T",
+          "displayExtension": "sysadmingroup",
+          "name": "etc:sysadmingroup",
+          "typeOfGroup": "group",
+          "idIndex": "10000"
+        },
+        "responseMetadata": {
+          "serverVersion": "2.5.60",
+          "millis": "39"
+        }
+      }
+    }
+    ```
 
 <a name="composetips"></a>
 ## Docker Compose Tips
