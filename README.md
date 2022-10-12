@@ -2,7 +2,7 @@
 
 ## Table of Contents
 [Preliminaries](#preliminaries)  
-[Initial Bootstrap](#bootstrap)  
+[Initial Services Bootstrap](#bootstrap)  
 [Docker Compose Tips](#composetips)  
 [Inspecting Database Tables](#databasetables)  
 
@@ -28,7 +28,7 @@ sandbox can use for outoing email messages. You may want to use a Gmail account 
 an [App Password](https://support.google.com/mail/answer/185833?hl=en).
 
 <a name="bootstrap"></a>
-## Initial Bootstrap
+## Initial Services Bootstrap
 
 1. Clone this repository to your local filesystem:
 
@@ -190,19 +190,46 @@ cloned directory:
     docker compose --profile grouper-ws --profile grouper-daemon up -d
     ```
 
+1. Fix the permission of the `srv/comanage-registry/local/Plugin` directory:
+
+    ```
+    sudo chown $USER srv/comanage-registry/local/Plugin
+    ```
+
+1. Clone the MyligosyncJob as a submodule:
+
+    ```
+    git submodule add https://github.com/cilogon/MyligosyncJob.git srv/comanage-registry/local/Plugin/MyligosyncJob
+    ```
+
+1. Edit the COmanage Registry database configuration file `srv/comanage-registry/local/Config/database.php` and replace
+`YOUR_LOGIN` and `YOUR_PASSWORD` with the database credentials given to you by the MyLIGO team.
+
+1. Log back into COmanage Registry as the platform administrator and create the LIGO CO by browsing to
+`Platform > COs > Add CO`. Name the new CO `LIGO` with Description `LIGO`.
+
+1. Break into the COmanage Registry container and run the MyLIGO sync job to pull data from MyLIGO into COmanange Registry:
+    ```
+    docker exec -it igwn-sandbox-registry-1 /bin/bash
+    cd /srv/comanage-registry/app
+    find tmp/cache -type f -delete
+    ./Console/cake job MyligosyncJob.Myligosync -c 2 -s -v
+    find tmp/cache -type f -delete
+    ```
+
 <a name="composetips"></a>
 ## Docker Compose Tips
 
-1. To bring the services up in the background:
+1. To bring all services up in the background:
 
     ```
-    docker compose up -d
+    docker compose --profile grouper-ws --profile grouper-daemon up -d
     ```
 
 1. To bring the services down:
 
     ```
-    docker compose down
+    docker compose --profile grouper-ws --profile grouper-daemon down
     ```
 
 1. To see all log files from all services:
