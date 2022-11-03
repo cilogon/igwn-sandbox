@@ -1,0 +1,10 @@
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to dn.base="cn=admin,dc=directory,dc=ligo,dc=org" by sockname.regex=/var/run/slapd/ldapi auth by users none by * none
+olcAccess: {1}to dn.base="uid=syncrepl,o=system,dc=directory,dc=ligo,dc=org" by self auth by anonymous auth by * none
+olcAccess: {2}to dn.subtree="o=CO,dc=directory,dc=ligo,dc=org" by dn="uid=syncrepl,o=system,dc=directory,dc=ligo,dc=org" read by * none break
+olcAccess: {3}to dn.subtree="o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" by dn="uid=registry_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" read by dn="uid=readonly_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" read by dn="uid=proxy_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" read by dn="uid=grouper_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" read by dn="uid=oa4mp_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" read by self auth by anonymous auth by * none break
+olcAccess: {4}to dn.subtree="ou=people,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" by dn="uid=registry_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" write by * none break
+olcAccess: {5}to dn.subtree="ou=groups,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" by dn="uid=grouper_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org" write by * none break
+olcAccess: {6}to * by * none
