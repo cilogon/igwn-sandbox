@@ -211,6 +211,44 @@ cloned directory:
     find tmp/cache -type f -delete
     ```
 
+1. Verify that the slapd service is running and that you can query it using the `registry_user` DN:
+    ```
+    ldapsearch \
+        -LLL \
+        -H ldap://127.0.0.1 \
+        -D 'uid=registry_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org' \
+        -x \
+        -w 'password' \
+        -b 'o=LIGO,o=CO,dc=directory,dc=ligo,dc=org' dn
+    ```
+    The output should be
+    ```
+    dn: o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: ou=groups,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: ou=people,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: uid=proxy_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: uid=grouper_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: uid=readonly_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+
+    dn: uid=registry_user,ou=system,o=LIGO,o=CO,dc=directory,dc=ligo,dc=org
+    ```
+
+1. Break into the COmanage Registry container and run the MyLIGO sync job to create the LDAP Provisioner:
+    ```
+    docker exec -it igwn-sandbox-registry-1 /bin/bash
+    cd /srv/comanage-registry/app
+    find tmp/cache -type f -delete
+    ./Console/cake job MyligosyncJob.Myligosync --ldap-provisioner -c 2 -s
+    find tmp/cache -type f -delete
+    ```
+
 <a name="composetips"></a>
 ## Docker Compose Tips
 
